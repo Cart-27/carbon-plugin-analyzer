@@ -729,31 +729,21 @@ async function processFile(file) {
 
   setStep(1, 'Sending to Claude...');
 
-  const systemPrompt = `You are an expert Rust game server plugin developer specializing in Carbon modding framework and uMod/Oxide. You deeply understand C# performance optimization for Rust plugins: hook efficiency, garbage collection pressure, coroutine use, Facepunch.Pool usage, string allocation, LINQ avoidance in hot paths, timer management, BasePlayer null checks, entity caching, permission caching, layer masks, ConVar hooks, NetworkableId usage, and Carbon-specific APIs.
+  const systemPrompt = `You are an expert Rust game server plugin developer specializing in Carbon modding framework and uMod/Oxide. You deeply understand C# performance optimization for Rust plugins.
 
-Analyze the provided C# plugin code and return ONLY a valid JSON object — no markdown, no backticks, no preamble, no text before or after the JSON. The JSON must have exactly this structure:
-{
-  "overallScore": <integer 0-100>,
-  "verdict": "<one sentence overall verdict>",
-  "categories": {
-    "performance": <integer 0-100>,
-    "carbon_compat": <integer 0-100>,
-    "memory": <integer 0-100>,
-    "code_quality": <integer 0-100>
-  },
-  "issues": [
-    {
-      "severity": "critical",
-      "title": "<short title>",
-      "line": "<line number, range, or general>",
-      "detail": "<1-2 sentence explanation>",
-      "fix": "<concrete code fix as a string, or null>"
-    }
-  ]
-}
+CRITICAL INSTRUCTION: Your entire response must be ONLY a raw JSON object. No text before it. No text after it. No markdown. No backtick code fences. No explanation. The very first character of your response must be { and the very last character must be }.
 
-severity must be one of: critical, warning, info, good.
-Include 5-10 issues total. Cover: hook performance, LINQ in hot paths, missing null checks, Facepunch.Pool usage, timer leaks, string allocation, permission caching, Carbon API compatibility. Always include at least one good severity item if any correct pattern exists. Be specific to the actual submitted code — reference real line numbers and real variable/method names.`;
+Return this exact JSON shape:
+{"overallScore":72,"verdict":"Short verdict.","categories":{"performance":70,"carbon_compat":60,"memory":75,"code_quality":80},"issues":[{"severity":"warning","title":"Example","line":"42","detail":"Explanation.","fix":"// fix here"}]}
+
+Rules:
+- overallScore and all category values are integers 0-100
+- severity is exactly one of: critical, warning, info, good
+- include 5-10 issues covering: hook performance, LINQ in hot paths, null checks, Facepunch.Pool, timer leaks, string allocation, permission caching, Carbon API compatibility
+- always include at least one good severity item if any correct pattern exists
+- reference real line numbers and real method/variable names from the code
+- fix is a string with escaped newlines (\n) and escaped backslashes, or null
+- do not include comments in the JSON`;
 
   let responseText;
   try {
@@ -801,10 +791,15 @@ Include 5-10 issues total. Cover: hook performance, LINQ in hot paths, missing n
 
   let parsed;
   try {
-    const clean = responseText.replace(/```json|```/g, '').trim();
-    parsed = JSON.parse(clean);
+    // Strip markdown fences if present
+    let clean = responseText.replace(/```json|\s*```/g, '').trim();
+    // Extract the first { ... } block in case model adds surrounding text
+    const match = clean.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('No JSON object found in response');
+    parsed = JSON.parse(match[0]);
   } catch(e) {
-    showError('Could not parse Claude\'s response as JSON. Try again — the model occasionally adds extra text.');
+    console.error('Parse error:', e.message, '\nRaw response:', responseText.slice(0, 500));
+    showError('Could not parse the analysis response. Raw response logged to console. Please try again.');
     return;
   }
 
