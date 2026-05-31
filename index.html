@@ -8,28 +8,15 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:         #080a0d;
-  --surface:    #0f1318;
-  --surface2:   #161c24;
-  --border:     #1e2a38;
-  --border2:    #28374a;
-  --accent:     #f97316;
-  --accent-dim: rgba(249,115,22,0.12);
-  --accent-glow:rgba(249,115,22,0.06);
-  --text:       #dde4ed;
-  --text2:      #7a8fa6;
-  --text3:      #3d5166;
-  --green:      #34d399;
-  --green-bg:   rgba(52,211,153,0.08);
-  --red:        #f87171;
-  --red-bg:     rgba(248,113,113,0.08);
-  --yellow:     #fbbf24;
-  --yellow-bg:  rgba(251,191,36,0.08);
-  --blue:       #60a5fa;
-  --blue-bg:    rgba(96,165,250,0.08);
-  --mono: 'IBM Plex Mono', monospace;
-  --sans: 'IBM Plex Sans', sans-serif;
-  --r: 6px; --r-lg: 10px;
+  --bg:#080a0d;--surface:#0f1318;--surface2:#161c24;--border:#1e2a38;--border2:#28374a;
+  --accent:#f97316;--accent-dim:rgba(249,115,22,0.12);--accent-glow:rgba(249,115,22,0.06);
+  --text:#dde4ed;--text2:#7a8fa6;--text3:#3d5166;
+  --green:#34d399;--green-bg:rgba(52,211,153,0.08);
+  --red:#f87171;--red-bg:rgba(248,113,113,0.08);
+  --yellow:#fbbf24;--yellow-bg:rgba(251,191,36,0.08);
+  --blue:#60a5fa;--blue-bg:rgba(96,165,250,0.08);
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+  --r:6px;--r-lg:10px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -52,19 +39,21 @@ header{position:relative;z-index:1;display:flex;align-items:center;gap:1rem;padd
 .key-btn:hover{border-color:var(--accent);color:var(--accent)}
 .key-btn.save-btn{border-color:var(--green);color:var(--green)}
 .key-status{font-size:10px;color:var(--text3);white-space:nowrap}
-.key-status.ok{color:var(--green)}
-.key-status.err{color:var(--red)}
+.key-status.ok{color:var(--green)}.key-status.err{color:var(--red)}
 .section{margin-top:1.5rem;animation:fadeUp 0.25s ease both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Drop zone */
 #drop-zone{border:1.5px dashed var(--border2);border-radius:var(--r-lg);padding:3.5rem 2rem;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;background:var(--surface);position:relative}
 #drop-zone:hover,#drop-zone.drag-over{border-color:var(--accent);background:var(--accent-glow)}
 #drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .drop-glyph{font-size:2.2rem;line-height:1;margin-bottom:1rem;color:var(--text3);transition:color 0.2s}
 #drop-zone:hover .drop-glyph,#drop-zone.drag-over .drop-glyph{color:var(--accent)}
 .drop-title{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
-.drop-sub{font-size:11px;color:var(--text2)}
-.drop-sub span{color:var(--accent)}
+.drop-sub{font-size:11px;color:var(--text2)}.drop-sub span{color:var(--accent)}
 #no-key-warn{display:none;margin-top:0.75rem;padding:0.6rem 0.875rem;background:var(--yellow-bg);border:1px solid rgba(251,191,36,0.3);border-radius:var(--r);font-size:11px;color:var(--yellow);text-align:center}
+
+/* Progress */
 #progress{display:none;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-lg);padding:1.5rem;margin-top:1.5rem}
 .prog-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
 .prog-spinner{width:18px;height:18px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
@@ -77,28 +66,63 @@ header{position:relative;z-index:1;display:flex;align-items:center;gap:1rem;padd
 .prog-step{font-size:10px;padding:2px 8px;border-radius:99px;border:1px solid var(--border);color:var(--text3);transition:all 0.2s}
 .prog-step.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
 .prog-step.done{border-color:rgba(52,211,153,0.4);color:var(--green);background:var(--green-bg)}
+
+/* Results */
 #results{display:none;margin-top:1.5rem}
 .result-meta{display:flex;align-items:center;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
 .chip{font-size:10px;padding:2px 9px;border-radius:99px;border:1px solid var(--border2);color:var(--text3)}
 .reset-btn{font-size:11px;font-family:var(--mono);padding:4px 12px;border:1px solid var(--border2);border-radius:var(--r);background:transparent;color:var(--text2);cursor:pointer;transition:all 0.15s}
 .reset-btn:hover{border-color:var(--accent);color:var(--accent)}
 
-/* Optimize full plugin button */
+/* Optimize bar */
 .optimize-bar{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding:0.875rem 1rem;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-lg)}
 .optimize-bar p{font-size:12px;color:var(--text2);flex:1;font-family:var(--sans)}
 .optimize-btn{font-family:var(--sans);font-size:12px;font-weight:600;padding:7px 18px;background:var(--accent);border:none;border-radius:var(--r);color:#0d0f12;cursor:pointer;transition:background 0.15s;white-space:nowrap;flex-shrink:0}
-.optimize-btn:hover{background:var(--yellow)}
-.optimize-btn:disabled{opacity:0.4;cursor:not-allowed}
+.optimize-btn:hover{background:var(--yellow)}.optimize-btn:disabled{opacity:0.4;cursor:not-allowed}
 
-/* Full optimize panel */
+/* Optimize panel */
 #optimize-panel{display:none;margin-bottom:1.5rem;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-lg);overflow:hidden}
-.opt-header{display:flex;align-items:center;gap:10px;padding:1rem 1.25rem;border-bottom:1px solid var(--border)}
-.opt-title{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text);flex:1}
+.opt-header{display:flex;align-items:center;gap:8px;padding:0.875rem 1.25rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.opt-title{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text);flex:1;min-width:120px}
 .opt-status{font-size:11px;color:var(--text3)}
+.opt-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .download-btn{font-family:var(--sans);font-size:11px;font-weight:600;padding:5px 14px;background:var(--green);border:none;border-radius:var(--r);color:#050a08;cursor:pointer;transition:background 0.15s;display:none}
 .download-btn:hover{background:#6ee7b7}
+.fix-compile-btn{font-family:var(--sans);font-size:11px;font-weight:600;padding:5px 14px;background:transparent;border:1px solid var(--red);border-radius:var(--r);color:var(--red);cursor:pointer;transition:all 0.15s;display:none}
+.fix-compile-btn:hover{background:var(--red-bg)}
 #opt-code{padding:1rem 1.25rem;font-size:11px;color:#a8d8b0;white-space:pre-wrap;word-break:break-all;line-height:1.65;max-height:500px;overflow-y:auto;background:#050709;min-height:60px}
 
+/* Compile error fix panel */
+#compile-fix-panel{display:none;margin-bottom:1.5rem;background:var(--surface);border:1px solid rgba(248,113,113,0.35);border-radius:var(--r-lg);overflow:hidden}
+.cfix-header{display:flex;align-items:center;gap:10px;padding:0.875rem 1.25rem;border-bottom:1px solid var(--border);background:var(--red-bg)}
+.cfix-title{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--red);flex:1}
+.cfix-close{background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 4px;line-height:1}
+.cfix-close:hover{color:var(--text)}
+.cfix-body{padding:1.25rem}
+.cfix-row{margin-bottom:1rem}
+.cfix-label{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin-bottom:6px}
+.cfix-drop{border:1.5px dashed var(--border2);border-radius:var(--r);padding:1rem;text-align:center;cursor:pointer;position:relative;background:var(--surface2);transition:border-color 0.15s}
+.cfix-drop:hover,.cfix-drop.drag-over{border-color:var(--accent)}
+.cfix-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.cfix-drop-text{font-size:12px;color:var(--text2);font-family:var(--sans)}
+.cfix-drop.has-file .cfix-drop-text{color:var(--green)}
+.cfix-textarea{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);padding:0.75rem 1rem;font-family:var(--mono);font-size:11px;color:var(--text);resize:vertical;min-height:100px;outline:none;transition:border-color 0.15s;line-height:1.6}
+.cfix-textarea:focus{border-color:var(--red)}
+.cfix-textarea::placeholder{color:var(--text3)}
+.cfix-hint{font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--sans)}
+.cfix-submit{font-family:var(--sans);font-size:12px;font-weight:600;padding:8px 20px;background:var(--red);border:none;border-radius:var(--r);color:#fff;cursor:pointer;transition:background 0.15s;width:100%}
+.cfix-submit:hover{background:#f87171cc}.cfix-submit:disabled{opacity:0.4;cursor:not-allowed}
+
+/* Fixed output panel */
+#fixed-panel{display:none;margin-bottom:1.5rem;background:var(--surface);border:1px solid rgba(52,211,153,0.35);border-radius:var(--r-lg);overflow:hidden}
+.fixed-header{display:flex;align-items:center;gap:10px;padding:0.875rem 1.25rem;border-bottom:1px solid var(--border);background:var(--green-bg)}
+.fixed-title{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--green);flex:1}
+.fixed-status{font-size:11px;color:var(--text3)}
+.fixed-dl-btn{font-family:var(--sans);font-size:11px;font-weight:600;padding:5px 14px;background:var(--green);border:none;border-radius:var(--r);color:#050a08;cursor:pointer;transition:background 0.15s;display:none}
+.fixed-dl-btn:hover{background:#6ee7b7}
+#fixed-code{padding:1rem 1.25rem;font-size:11px;color:#a8d8b0;white-space:pre-wrap;word-break:break-all;line-height:1.65;max-height:500px;overflow-y:auto;background:#050709;min-height:60px}
+
+/* Score / issues */
 .score-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-lg);padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.25rem;margin-bottom:1rem}
 .score-ring{width:74px;height:74px;border-radius:50%;border:3px solid;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
 .score-num{font-family:var(--sans);font-size:26px;font-weight:600;line-height:1}
@@ -124,22 +148,16 @@ header{position:relative;z-index:1;display:flex;align-items:center;gap:1rem;padd
 .issue-body.open{display:block}
 .issue-detail-text{margin-bottom:8px}
 .issue-fix{margin-top:0.5rem;background:#050709;border-left:2px solid var(--green);padding:0.6rem 0.875rem;font-size:11px;color:#86efac;white-space:pre-wrap;word-break:break-all;line-height:1.65;border-radius:0 var(--r) var(--r) 0}
-
-/* Fix this issue button + streaming panel */
 .fix-btn{font-family:var(--mono);font-size:10px;padding:3px 10px;border:1px solid var(--accent);border-radius:var(--r);background:transparent;color:var(--accent);cursor:pointer;transition:all 0.15s;margin-top:8px;display:inline-block}
-.fix-btn:hover{background:var(--accent-dim)}
-.fix-btn:disabled{opacity:0.4;cursor:not-allowed}
+.fix-btn:hover{background:var(--accent-dim)}.fix-btn:disabled{opacity:0.4;cursor:not-allowed}
 .fix-stream{margin-top:8px;background:#050709;border-left:2px solid var(--accent);padding:0.6rem 0.875rem;font-size:11px;color:#fcd9b6;white-space:pre-wrap;word-break:break-all;line-height:1.65;border-radius:0 var(--r) var(--r) 0;display:none;min-height:30px}
 .fix-stream.open{display:block}
 .fix-stream-status{font-size:10px;color:var(--text3);margin-bottom:4px}
 
 #error-box{display:none;margin-top:1.5rem;padding:1rem 1.25rem;background:var(--red-bg);border:1px solid rgba(248,113,113,0.35);border-radius:var(--r);color:var(--red);font-size:12px;line-height:1.7}
 footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--text3);max-width:900px;margin:0 auto}
-footer a{color:var(--text3);text-decoration:none}
-footer a:hover{color:var(--accent)}
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:var(--surface)}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+footer a{color:var(--text3);text-decoration:none}footer a:hover{color:var(--accent)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--surface)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 </style>
 </head>
 <body>
@@ -154,7 +172,7 @@ footer a:hover{color:var(--accent)}
     <div class="key-wrap">
       <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false" />
       <div class="key-actions">
-        <button class="key-btn" id="toggle-key-btn" onclick="toggleKeyVis()" title="Show/hide">···</button>
+        <button class="key-btn" id="toggle-key-btn" onclick="toggleKeyVis()">···</button>
         <button class="key-btn save-btn" onclick="saveKey()">Save</button>
       </div>
     </div>
@@ -188,6 +206,45 @@ footer a:hover{color:var(--accent)}
     </div>
   </div>
 
+  <!-- Compile error fix panel -->
+  <div id="compile-fix-panel">
+    <div class="cfix-header">
+      <div class="cfix-title">⚠ Fix compile errors</div>
+      <button class="cfix-close" onclick="closeCompilePanel()">✕</button>
+    </div>
+    <div class="cfix-body">
+      <div class="cfix-row">
+        <div class="cfix-label">Failed .cs file (optional — skip to use the last optimized code)</div>
+        <div class="cfix-drop" id="cfix-drop">
+          <input type="file" id="cfix-file-input" accept=".cs" />
+          <div class="cfix-drop-text" id="cfix-drop-text">Drop the failed .cs file here, or click to browse</div>
+        </div>
+      </div>
+      <div class="cfix-row">
+        <div class="cfix-label">Paste the server compile error output</div>
+        <textarea class="cfix-textarea" id="cfix-errors" placeholder="05/31 5:28:31 PM | Failed compiling 'BoxLooters.cs':
+1. Unterminated string literal [CS1039] (BoxLooters 61 line 381)
+2. ) expected [CS1026] (BoxLooters 62 line 381)
+..."></textarea>
+        <div class="cfix-hint">Paste the full error block from your Carbon / Oxide server console</div>
+      </div>
+      <button class="cfix-submit" id="cfix-submit-btn" onclick="submitCompileFix()">Send to Claude for fixing →</button>
+    </div>
+  </div>
+
+  <!-- Fixed output panel -->
+  <div id="fixed-panel">
+    <div class="fixed-header">
+      <div class="fixed-title">✓ Compile-error fix</div>
+      <div class="fixed-status" id="fixed-status">Streaming...</div>
+      <div class="opt-actions">
+        <button class="fixed-dl-btn" id="fixed-dl-btn" onclick="downloadFixed()">↓ Download .cs</button>
+        <button class="fix-compile-btn" id="fixed-retry-btn" onclick="openCompilePanel()" style="display:none;font-size:11px;padding:5px 14px;">Still failing? Fix again</button>
+      </div>
+    </div>
+    <div id="fixed-code"></div>
+  </div>
+
   <div id="error-box"></div>
   <div id="results"></div>
 </div>
@@ -202,6 +259,10 @@ footer a:hover{color:var(--accent)}
 let currentCode     = '';
 let currentFilename = '';
 let currentIssues   = [];
+let optimizedCode   = '';
+let fixedCode       = '';
+let cfixFileCode    = '';
+let cfixFilename    = '';
 
 // ── API key ───────────────────────────────────────────────────────────────────
 const keyInput  = document.getElementById('api-key-input');
@@ -233,10 +294,7 @@ function toggleKeyVis() {
 }
 keyInput.addEventListener('input', () => { keyInput.classList.remove('saved'); keyStatus.textContent = ''; keyStatus.className = 'key-status'; });
 keyInput.addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
-
-function getApiKey() {
-  return keyInput.value.trim() || localStorage.getItem('cpa_apikey') || '';
-}
+function getApiKey() { return keyInput.value.trim() || localStorage.getItem('cpa_apikey') || ''; }
 
 // ── Drop zone ─────────────────────────────────────────────────────────────────
 const dropZone  = document.getElementById('drop-zone');
@@ -251,24 +309,41 @@ dropZone.addEventListener('drop', e => {
   else showError('Please drop a .cs file.');
 });
 fileInput.addEventListener('change', () => { if (fileInput.files[0]) processFile(fileInput.files[0]); });
-dropZone.addEventListener('mouseenter', () => {
-  if (!getApiKey()) document.getElementById('no-key-warn').style.display = 'block';
-});
+dropZone.addEventListener('mouseenter', () => { if (!getApiKey()) document.getElementById('no-key-warn').style.display = 'block'; });
 dropZone.addEventListener('mouseleave', () => { document.getElementById('no-key-warn').style.display = 'none'; });
+
+// ── Compile-fix drop zone ─────────────────────────────────────────────────────
+const cfixDrop  = document.getElementById('cfix-drop');
+const cfixInput = document.getElementById('cfix-file-input');
+
+cfixDrop.addEventListener('dragover', e => { e.preventDefault(); cfixDrop.classList.add('drag-over'); });
+cfixDrop.addEventListener('dragleave', () => cfixDrop.classList.remove('drag-over'));
+cfixDrop.addEventListener('drop', async e => {
+  e.preventDefault(); cfixDrop.classList.remove('drag-over');
+  const f = e.dataTransfer.files[0];
+  if (f && f.name.endsWith('.cs')) await loadCfixFile(f);
+});
+cfixInput.addEventListener('change', async () => { if (cfixInput.files[0]) await loadCfixFile(cfixInput.files[0]); });
+
+async function loadCfixFile(f) {
+  cfixFileCode = await f.text();
+  cfixFilename = f.name;
+  cfixDrop.classList.add('has-file');
+  document.getElementById('cfix-drop-text').textContent = '✓ ' + f.name + ' loaded';
+}
 
 // ── Progress ──────────────────────────────────────────────────────────────────
 const progressEl = document.getElementById('progress');
 const progLabel  = document.getElementById('prog-label');
 const progFile   = document.getElementById('prog-file');
 const progBar    = document.getElementById('prog-bar');
-const steps      = ['ps-read','ps-send','ps-analyze','ps-render'];
+const stepIds    = ['ps-read','ps-send','ps-analyze','ps-render'];
 
 function setStep(idx, label) {
   progLabel.textContent = label;
-  progBar.style.width = ((idx + 1) / steps.length * 100) + '%';
-  steps.forEach((id, i) => {
-    const el = document.getElementById(id);
-    el.className = 'prog-step' + (i < idx ? ' done' : i === idx ? ' active' : '');
+  progBar.style.width = ((idx + 1) / stepIds.length * 100) + '%';
+  stepIds.forEach((id, i) => {
+    document.getElementById(id).className = 'prog-step' + (i < idx ? ' done' : i === idx ? ' active' : '');
   });
 }
 function showProgress(filename) {
@@ -292,17 +367,18 @@ function showError(msg) {
   fileInput.value = '';
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// ── Utilities ─────────────────────────────────────────────────────────────────
 function esc(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function scoreColor(s) {
-  if (s >= 80) return { ring: 'var(--green)',  text: 'var(--green)' };
-  if (s >= 55) return { ring: 'var(--yellow)', text: 'var(--yellow)' };
-  return               { ring: 'var(--red)',   text: 'var(--red)' };
+  if (s >= 80) return { ring:'var(--green)', text:'var(--green)' };
+  if (s >= 55) return { ring:'var(--yellow)', text:'var(--yellow)' };
+  return { ring:'var(--red)', text:'var(--red)' };
 }
 
-async function callClaude(systemPrompt, userMessage) {
+// ── Claude API helpers ────────────────────────────────────────────────────────
+async function callClaude(system, user, maxTokens) {
   const apiKey = getApiKey();
   if (!apiKey) throw new Error('No API key. Enter your Anthropic API key at the top and click Save.');
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -313,24 +389,18 @@ async function callClaude(systemPrompt, userMessage) {
       'anthropic-version': '2023-06-01',
       'anthropic-dangerous-direct-browser-access': 'true'
     },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 4000,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userMessage }]
-    })
+    body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens: maxTokens || 2000, system, messages:[{ role:'user', content:user }] })
   });
   if (!resp.ok) {
-    const errBody = await resp.json().catch(() => ({}));
-    const msg = errBody?.error?.message || 'HTTP ' + resp.status;
-    if (resp.status === 401) throw new Error('Invalid API key. Check the key and try again.');
+    const err = await resp.json().catch(() => ({}));
+    if (resp.status === 401) throw new Error('Invalid API key.');
     if (resp.status === 429) throw new Error('Rate limited. Wait a moment and try again.');
-    throw new Error(msg);
+    throw new Error(err?.error?.message || 'HTTP ' + resp.status);
   }
   return resp;
 }
 
-async function streamClaude(systemPrompt, userMessage, onChunk) {
+async function streamClaude(system, user, onChunk, maxTokens) {
   const apiKey = getApiKey();
   if (!apiKey) throw new Error('No API key. Enter your Anthropic API key at the top and click Save.');
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -341,39 +411,30 @@ async function streamClaude(systemPrompt, userMessage, onChunk) {
       'anthropic-version': '2023-06-01',
       'anthropic-dangerous-direct-browser-access': 'true'
     },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 4000,
-      stream: true,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userMessage }]
-    })
+    body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens: maxTokens || 4000, stream:true, system, messages:[{ role:'user', content:user }] })
   });
   if (!resp.ok) {
-    const errBody = await resp.json().catch(() => ({}));
-    const msg = errBody?.error?.message || 'HTTP ' + resp.status;
-    if (resp.status === 401) throw new Error('Invalid API key. Check the key and try again.');
+    const err = await resp.json().catch(() => ({}));
+    if (resp.status === 401) throw new Error('Invalid API key.');
     if (resp.status === 429) throw new Error('Rate limited. Wait a moment and try again.');
-    throw new Error(msg);
+    throw new Error(err?.error?.message || 'HTTP ' + resp.status);
   }
   const reader = resp.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = '';
+  const dec = new TextDecoder();
+  let buf = '';
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split('\n');
-    buffer = lines.pop();
+    buf += dec.decode(value, { stream:true });
+    const lines = buf.split('\n');
+    buf = lines.pop();
     for (const line of lines) {
       if (!line.startsWith('data: ')) continue;
       const raw = line.slice(6).trim();
       if (raw === '[DONE]') continue;
       try {
         const ev = JSON.parse(raw);
-        if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') {
-          onChunk(ev.delta.text);
-        }
+        if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') onChunk(ev.delta.text);
       } catch {}
     }
   }
@@ -390,7 +451,7 @@ async function processFile(file) {
   const kb = (file.size / 1024).toFixed(1);
   setStep(1, 'Sending to Claude...');
 
-  const systemPrompt = `You are an expert Rust game server plugin developer specializing in Carbon modding framework and uMod/Oxide. You deeply understand C# performance optimization for Rust plugins.
+  const sys = `You are an expert Rust game server plugin developer specializing in Carbon modding framework and uMod/Oxide. You deeply understand C# performance optimization for Rust plugins.
 
 CRITICAL INSTRUCTION: Your entire response must be ONLY a raw JSON object. No text before it. No text after it. No markdown. No backtick code fences. No explanation. The very first character of your response must be { and the very last character must be }.
 
@@ -409,7 +470,7 @@ Rules:
   let responseText;
   try {
     setStep(2, 'Claude is analyzing...');
-    const resp = await callClaude(systemPrompt, `Analyze this Rust Carbon plugin (filename: ${file.name}, ${lines} lines, ${kb}KB):\n\n${currentCode.slice(0, 15000)}`);
+    const resp = await callClaude(sys, `Analyze this Rust Carbon plugin (filename: ${file.name}, ${lines} lines, ${kb}KB):\n\n${currentCode.slice(0, 15000)}`, 2000);
     const data = await resp.json();
     responseText = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
   } catch(e) { showError(e.message); return; }
@@ -426,82 +487,70 @@ Rules:
     showError('Could not parse the analysis response. Check browser console for details.');
     return;
   }
-
   currentIssues = parsed.issues || [];
   parsed._meta = { filename: file.name, lines, kb };
   setTimeout(() => { hideProgress(); renderResults(parsed); fileInput.value = ''; }, 300);
 }
 
-// ── Render results ────────────────────────────────────────────────────────────
+// ── Render ────────────────────────────────────────────────────────────────────
 function renderResults(data) {
   const resultsEl = document.getElementById('results');
-  const sc        = scoreColor(data.overallScore ?? 0);
-  const cats      = data.categories || {};
-  const issues    = data.issues || [];
-  const meta      = data._meta || {};
-  const groups    = { critical:[], warning:[], info:[], good:[] };
-  issues.forEach((issue, globalIdx) => {
-    issue._idx = globalIdx;
-    (groups[issue.severity] || groups.info).push(issue);
-  });
+  const sc     = scoreColor(data.overallScore ?? 0);
+  const cats   = data.categories || {};
+  const issues = data.issues || [];
+  const meta   = data._meta || {};
+  const groups = { critical:[], warning:[], info:[], good:[] };
+  issues.forEach((issue, idx) => { issue._idx = idx; (groups[issue.severity] || groups.info).push(issue); });
 
   const catDefs = [
-    { key: 'performance',   label: 'Performance' },
-    { key: 'carbon_compat', label: 'Carbon API' },
-    { key: 'memory',        label: 'Memory' },
-    { key: 'code_quality',  label: 'Code Quality' },
+    { key:'performance', label:'Performance' },
+    { key:'carbon_compat', label:'Carbon API' },
+    { key:'memory', label:'Memory' },
+    { key:'code_quality', label:'Code Quality' },
   ];
 
   let html = '';
-
-  // Meta + reset
   html += '<div class="result-meta">';
   if (meta.filename) html += '<span class="chip">\uD83D\uDCC4 ' + esc(meta.filename) + '</span>';
   if (meta.lines)    html += '<span class="chip">' + meta.lines + ' lines</span>';
   if (meta.kb)       html += '<span class="chip">' + meta.kb + ' KB</span>';
   html += '<button class="reset-btn" onclick="resetTool()">&#8592; New file</button></div>';
 
-  // Optimize full plugin bar
   html += '<div class="optimize-bar">'
     + '<p>Apply all optimizations automatically — Claude rewrites the entire plugin and gives you a download.</p>'
     + '<button class="optimize-btn" id="optimize-full-btn" onclick="optimizeFull()">&#9654; Optimize full plugin</button>'
     + '</div>';
 
-  // Full optimize streaming panel
   html += '<div id="optimize-panel">'
     + '<div class="opt-header">'
     + '<div class="opt-title">Optimized plugin</div>'
     + '<div class="opt-status" id="opt-status"></div>'
+    + '<div class="opt-actions">'
     + '<button class="download-btn" id="download-btn" onclick="downloadOptimized()">&#8595; Download .cs</button>'
-    + '</div>'
+    + '<button class="fix-compile-btn" id="fix-compile-btn" onclick="openCompilePanel()">&#9888; Compile errors? Fix it</button>'
+    + '</div></div>'
     + '<div id="opt-code"></div>'
     + '</div>';
 
-  // Score card
   html += '<div class="score-card">'
     + '<div class="score-ring" style="border-color:' + sc.ring + ';color:' + sc.text + ';">'
-    + '<div class="score-num">' + (data.overallScore ?? '?') + '</div>'
-    + '<div class="score-denom">/100</div></div>'
-    + '<div class="score-body">'
-    + '<div class="score-title">Optimization score</div>'
-    + '<div class="score-verdict">' + esc(data.verdict || '') + '</div>'
-    + '</div></div>';
+    + '<div class="score-num">' + (data.overallScore ?? '?') + '</div><div class="score-denom">/100</div></div>'
+    + '<div class="score-body"><div class="score-title">Optimization score</div>'
+    + '<div class="score-verdict">' + esc(data.verdict || '') + '</div></div></div>';
 
-  // Category grid
   html += '<div class="cats">';
   catDefs.forEach(({ key, label }) => {
     const val = cats[key] ?? '—';
-    const c = typeof val === 'number' ? scoreColor(val) : { text: 'var(--text3)' };
+    const c = typeof val === 'number' ? scoreColor(val) : { text:'var(--text3)' };
     html += '<div class="cat"><div class="cat-val" style="color:' + c.text + '">' + val + '</div><div class="cat-lbl">' + label + '</div></div>';
   });
   html += '</div>';
 
-  // Issue groups
   const groupDefs = [
-    { key: 'critical', label: 'Critical' },
-    { key: 'warning',  label: 'Warnings' },
-    { key: 'info',     label: 'Suggestions' },
-    { key: 'good',     label: 'Good practices' },
+    { key:'critical', label:'Critical' },
+    { key:'warning', label:'Warnings' },
+    { key:'info', label:'Suggestions' },
+    { key:'good', label:'Good practices' },
   ];
   let hasAny = false;
   groupDefs.forEach(({ key, label }) => {
@@ -518,22 +567,16 @@ function renderResults(data) {
         + '<span class="sev ' + sc2 + '">' + esc(issue.severity) + '</span>'
         + '<div style="flex:1"><div class="issue-title">' + esc(issue.title || '') + '</div>'
         + (issue.line && issue.line !== 'general' ? '<div class="issue-line">line ' + esc(String(issue.line)) + '</div>' : '')
-        + '</div>'
-        + '<span style="font-size:11px;color:var(--text3);flex-shrink:0;margin-top:1px;">&#9662;</span>'
+        + '</div><span style="font-size:11px;color:var(--text3);flex-shrink:0;margin-top:1px;">&#9662;</span>'
         + '</div>'
         + '<div class="issue-body" id="ib_' + uid + '">'
         + '<div class="issue-detail-text">' + esc(issue.detail || '') + '</div>'
         + (issue.fix ? '<div class="issue-fix">' + esc(issue.fix) + '</div>' : '')
         + (canFix ? '<button class="fix-btn" id="fixbtn_' + uid + '" onclick="fixIssue(' + issue._idx + ',\'' + uid + '\')">&#9656; Fix this issue</button>' : '')
-        + '<div class="fix-stream" id="fixstream_' + uid + '">'
-        + '<div class="fix-stream-status" id="fixstatus_' + uid + '"></div>'
-        + '<div id="fixcode_' + uid + '"></div>'
-        + '</div>'
-        + '</div>'
-        + '</div>';
+        + '<div class="fix-stream" id="fixstream_' + uid + '"><div class="fix-stream-status" id="fixstatus_' + uid + '"></div><div id="fixcode_' + uid + '"></div></div>'
+        + '</div></div>';
     });
   });
-
   if (!hasAny) {
     html += '<div style="padding:1rem;background:var(--green-bg);border:1px solid rgba(52,211,153,0.3);border-radius:var(--r);color:var(--green);font-size:12px;margin-top:1rem;">&#10003; No issues found — plugin looks well-optimized!</div>';
   }
@@ -551,12 +594,11 @@ function toggleIssue(uid) {
 async function fixIssue(issueIdx, uid) {
   const issue = currentIssues[issueIdx];
   if (!issue) return;
-
-  const btn        = document.getElementById('fixbtn_' + uid);
-  const streamDiv  = document.getElementById('fixstream_' + uid);
-  const statusDiv  = document.getElementById('fixstatus_' + uid);
-  const codeDiv    = document.getElementById('fixcode_' + uid);
-  const bodyDiv    = document.getElementById('ib_' + uid);
+  const btn       = document.getElementById('fixbtn_' + uid);
+  const streamDiv = document.getElementById('fixstream_' + uid);
+  const statusDiv = document.getElementById('fixstatus_' + uid);
+  const codeDiv   = document.getElementById('fixcode_' + uid);
+  const bodyDiv   = document.getElementById('ib_' + uid);
 
   btn.disabled = true;
   btn.textContent = 'Fixing...';
@@ -565,48 +607,30 @@ async function fixIssue(issueIdx, uid) {
   codeDiv.textContent = '';
   bodyDiv.classList.add('open');
 
-  const systemPrompt = `You are an expert Rust/Carbon C# plugin developer. The user has a specific issue in their plugin that needs fixing. Provide ONLY the corrected C# code for the affected section — no explanation before or after, no markdown fences, just raw C# code. Include a brief comment above the changed lines starting with // FIX: explaining what changed.`;
-
-  const userMsg = `Plugin file: ${currentFilename}
-
-Issue to fix:
-Title: ${issue.title}
-Severity: ${issue.severity}
-Line: ${issue.line}
-Detail: ${issue.detail}
-Suggested fix: ${issue.fix || 'none provided'}
-
-Relevant plugin code:
-${currentCode.slice(0, 12000)}
-
-Provide the corrected code section only.`;
+  const sys = `You are an expert Rust/Carbon C# plugin developer. Provide ONLY the corrected C# code for the affected section — no explanation, no markdown fences, just raw C# code. Add a // FIX: comment above every changed line.`;
+  const msg = `Plugin: ${currentFilename}\n\nIssue: ${issue.title}\nSeverity: ${issue.severity}\nLine: ${issue.line}\nDetail: ${issue.detail}\nSuggested fix: ${issue.fix || 'none'}\n\nCode:\n${currentCode.slice(0, 12000)}\n\nProvide only the corrected section.`;
 
   try {
-    let accumulated = '';
-    await streamClaude(systemPrompt, userMsg, chunk => {
-      accumulated += chunk;
-      codeDiv.textContent = accumulated;
-      streamDiv.scrollTop = streamDiv.scrollHeight;
-    });
+    let acc = '';
+    await streamClaude(sys, msg, chunk => { acc += chunk; codeDiv.textContent = acc; streamDiv.scrollTop = streamDiv.scrollHeight; });
     statusDiv.textContent = '✓ Done — copy the code above into your plugin';
     btn.textContent = '✓ Fixed';
   } catch(e) {
     statusDiv.textContent = 'Error: ' + e.message;
     btn.disabled = false;
-    btn.textContent = '⟳ Retry fix';
+    btn.textContent = '⟳ Retry';
   }
 }
 
 // ── Optimize full plugin ──────────────────────────────────────────────────────
-let optimizedCode = '';
-
 async function optimizeFull() {
   if (!currentCode) return;
-  const btn   = document.getElementById('optimize-full-btn');
-  const panel = document.getElementById('optimize-panel');
-  const codeEl  = document.getElementById('opt-code');
+  const btn      = document.getElementById('optimize-full-btn');
+  const panel    = document.getElementById('optimize-panel');
+  const codeEl   = document.getElementById('opt-code');
   const statusEl = document.getElementById('opt-status');
-  const dlBtn  = document.getElementById('download-btn');
+  const dlBtn    = document.getElementById('download-btn');
+  const fixBtn   = document.getElementById('fix-compile-btn');
 
   btn.disabled = true;
   btn.textContent = 'Optimizing...';
@@ -614,40 +638,43 @@ async function optimizeFull() {
   codeEl.textContent = '';
   statusEl.textContent = 'Streaming rewrite...';
   dlBtn.style.display = 'none';
+  fixBtn.style.display = 'none';
   optimizedCode = '';
+  document.getElementById('compile-fix-panel').style.display = 'none';
+  document.getElementById('fixed-panel').style.display = 'none';
+  panel.scrollIntoView({ behavior:'smooth', block:'start' });
 
-  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const sys = `You are an expert Rust game server plugin developer specializing in Carbon modding framework and uMod/Oxide. Rewrite the provided C# plugin applying all performance and Carbon-compatibility optimizations.
 
-  const systemPrompt = `You are an expert Rust game server plugin developer specializing in Carbon modding framework and uMod/Oxide. You are rewriting a C# plugin to apply all performance and Carbon-compatibility optimizations.
+Output ONLY the complete rewritten C# source file. No explanation. No markdown. No backticks. Raw C# from the first using statement to the final closing brace. Add // FIX: comments above every changed line.
 
-Output ONLY the complete rewritten C# source file. No explanation. No markdown. No backticks. Just raw C# code from the first using statement to the final closing brace. Add // FIX: comments above every changed line explaining what was improved.
-
-Apply ALL of these optimizations where relevant:
+Apply ALL relevant optimizations:
 - Add permission caches (HashSet<ulong>) populated on OnPlayerConnected, rebuilt on permission grant/revoke hooks
 - Replace live UserHasPermission() calls with cache lookups
 - Change Dictionary<string, T> keyed by net ID to Dictionary<ulong, T>
 - Add early-exit type filters to OnEntityKill and other high-frequency hooks
 - Replace GetComponent<T>() in hot hooks with 'is' type checks
-- Replace string.Contains() chains with 'is' type checks first, string checks last
+- Reorder: 'is' type checks before any string.Contains() chains
 - Replace DateTime subtraction with DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-- Add dirty flags for SaveData() so disk writes only happen when data changed
+- Add dirty flags so SaveData() only writes when data actually changed
 - Add layer masks to all Physics.Raycast calls
 - Replace Vector3.Distance comparisons with sqrMagnitude
 - Pre-allocate reusable List/buffer fields for Vis.Entities calls
 - Add entity.net null guards before accessing entity.net.ID
 - Add OnServerInitialized to rebuild caches for already-connected players
+- Define helper methods BEFORE any hook that calls them to avoid Carbon forward-reference errors
+- Avoid interpolated strings with angle brackets inside SendConsoleCommand arguments — use string concatenation instead
 - Note Carbon-native migration path in a comment at the top`;
 
-  const userMsg = `Rewrite this entire plugin with all optimizations applied:\n\nFilename: ${currentFilename}\n\n${currentCode.slice(0, 14000)}`;
-
   try {
-    await streamClaude(systemPrompt, userMsg, chunk => {
+    await streamClaude(sys, `Rewrite this entire plugin:\n\nFilename: ${currentFilename}\n\n${currentCode.slice(0, 14000)}`, chunk => {
       optimizedCode += chunk;
       codeEl.textContent = optimizedCode;
       codeEl.scrollTop = codeEl.scrollHeight;
-    });
+    }, 4000);
     statusEl.textContent = '✓ Complete';
     dlBtn.style.display = 'inline-block';
+    fixBtn.style.display = 'inline-block';
     btn.textContent = '&#9654; Re-optimize';
     btn.disabled = false;
   } catch(e) {
@@ -659,12 +686,111 @@ Apply ALL of these optimizations where relevant:
 
 function downloadOptimized() {
   if (!optimizedCode) return;
-  const blob = new Blob([optimizedCode], { type: 'text/plain' });
+  triggerDownload(optimizedCode, currentFilename.replace('.cs', '_optimized.cs'));
+}
+
+// ── Compile-fix flow ──────────────────────────────────────────────────────────
+function openCompilePanel() {
+  const panel = document.getElementById('compile-fix-panel');
+  panel.style.display = 'block';
+  // Reset fields
+  cfixFileCode = '';
+  cfixFilename = '';
+  document.getElementById('cfix-errors').value = '';
+  document.getElementById('cfix-drop').classList.remove('has-file');
+  document.getElementById('cfix-drop-text').textContent = 'Drop the failed .cs file here, or click to browse';
+  document.getElementById('cfix-file-input').value = '';
+  panel.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function closeCompilePanel() {
+  document.getElementById('compile-fix-panel').style.display = 'none';
+}
+
+async function submitCompileFix() {
+  const errors = document.getElementById('cfix-errors').value.trim();
+  if (!errors) {
+    document.getElementById('cfix-errors').focus();
+    return;
+  }
+
+  // Decide which code to fix: uploaded file > last optimized > original
+  const codeToFix = cfixFileCode || optimizedCode || currentCode;
+  const filenameToFix = cfixFilename || (optimizedCode ? currentFilename.replace('.cs', '_optimized.cs') : currentFilename);
+
+  if (!codeToFix) {
+    alert('No plugin code available. Please upload the failed .cs file.');
+    return;
+  }
+
+  const submitBtn = document.getElementById('cfix-submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending to Claude...';
+
+  document.getElementById('compile-fix-panel').style.display = 'none';
+
+  const fixedPanel  = document.getElementById('fixed-panel');
+  const fixedCode_el = document.getElementById('fixed-code');
+  const fixedStatus  = document.getElementById('fixed-status');
+  const fixedDlBtn   = document.getElementById('fixed-dl-btn');
+  const fixedRetry   = document.getElementById('fixed-retry-btn');
+
+  fixedPanel.style.display = 'block';
+  fixedCode_el.textContent = '';
+  fixedStatus.textContent = 'Streaming fix...';
+  fixedDlBtn.style.display = 'none';
+  fixedRetry.style.display = 'none';
+  fixedCode = '';
+  fixedPanel.scrollIntoView({ behavior:'smooth', block:'start' });
+
+  const sys = `You are an expert Rust/Carbon C# plugin developer and compiler error specialist. Fix the C# plugin code so it compiles cleanly on Carbon/Oxide.
+
+Output ONLY the complete fixed C# source file. No explanation. No markdown. No backticks. Raw C# only, from the first using statement to the final closing brace.
+
+Common Carbon compile issues to watch for and fix:
+- Interpolated strings with angle brackets inside SendConsoleCommand — replace with string concatenation
+- Forward-reference errors: define helper methods before any hook that calls them
+- Mismatched braces or region directives
+- Invalid syntax from automated rewrites (missing semicolons, wrong operator usage)
+- String literal issues caused by nested quote characters
+Add a // FIXED: comment above every line you change.`;
+
+  const userMsg = `Plugin filename: ${filenameToFix}
+
+Compiler errors from the server:
+${errors}
+
+Plugin code to fix:
+${codeToFix.slice(0, 14000)}`;
+
+  try {
+    await streamClaude(sys, userMsg, chunk => {
+      fixedCode += chunk;
+      fixedCode_el.textContent = fixedCode;
+      fixedCode_el.scrollTop = fixedCode_el.scrollHeight;
+    }, 4000);
+    fixedStatus.textContent = '✓ Fixed — try loading this on your server';
+    fixedDlBtn.style.display = 'inline-block';
+    fixedRetry.style.display = 'inline-block';
+  } catch(e) {
+    fixedStatus.textContent = 'Error: ' + e.message;
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Send to Claude for fixing →';
+}
+
+function downloadFixed() {
+  if (!fixedCode) return;
+  const base = (cfixFilename || currentFilename).replace('_optimized.cs', '.cs').replace('.cs', '');
+  triggerDownload(fixedCode, base + '_fixed.cs');
+}
+
+function triggerDownload(content, filename) {
+  const blob = new Blob([content], { type:'text/plain' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
-  a.href     = url;
-  a.download = currentFilename.replace('.cs', '_optimized.cs');
-  a.click();
+  a.href = url; a.download = filename; a.click();
   URL.revokeObjectURL(url);
 }
 
@@ -673,12 +799,12 @@ function resetTool() {
   document.getElementById('results').style.display = 'none';
   document.getElementById('results').innerHTML = '';
   document.getElementById('error-box').style.display = 'none';
+  document.getElementById('compile-fix-panel').style.display = 'none';
+  document.getElementById('fixed-panel').style.display = 'none';
   dropZone.style.display = 'block';
   fileInput.value = '';
-  currentCode = '';
-  currentFilename = '';
+  currentCode = currentFilename = optimizedCode = fixedCode = cfixFileCode = cfixFilename = '';
   currentIssues = [];
-  optimizedCode = '';
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
