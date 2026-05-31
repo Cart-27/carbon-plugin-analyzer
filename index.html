@@ -11,7 +11,6 @@
   --bg:         #080a0d;
   --surface:    #0f1318;
   --surface2:   #161c24;
-  --surface3:   #1d2530;
   --border:     #1e2a38;
   --border2:    #28374a;
   --accent:     #f97316;
@@ -28,503 +27,119 @@
   --yellow-bg:  rgba(251,191,36,0.08);
   --blue:       #60a5fa;
   --blue-bg:    rgba(96,165,250,0.08);
-  --mono:       'IBM Plex Mono', monospace;
-  --sans:       'IBM Plex Sans', sans-serif;
-  --r:          6px;
-  --r-lg:       10px;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+  --r: 6px; --r-lg: 10px;
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px;min-height:100vh;line-height:1.6;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:999}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;opacity:0.25;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 1.5rem 4rem}
+header{position:relative;z-index:1;display:flex;align-items:center;gap:1rem;padding:1.75rem 1.5rem 1.5rem;border-bottom:1px solid var(--border);max-width:900px;margin:0 auto}
+.logo{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border:1.5px solid var(--accent);border-radius:var(--r);color:var(--accent);font-weight:600;font-size:13px;flex-shrink:0}
+.htext h1{font-family:var(--sans);font-size:17px;font-weight:600;color:var(--text);letter-spacing:-0.01em}
+.htext p{font-size:11px;color:var(--text3);margin-top:1px}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.key-wrap{position:relative;display:flex;align-items:center}
+.key-wrap input{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);padding:6px 60px 6px 10px;font-family:var(--mono);font-size:11px;color:var(--text);width:220px;outline:none;transition:border-color 0.15s}
+.key-wrap input::placeholder{color:var(--text3)}
+.key-wrap input:focus{border-color:var(--accent)}
+.key-wrap input.saved{border-color:var(--green)}
+.key-actions{position:absolute;right:6px;display:flex;gap:4px}
+.key-btn{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all 0.12s;white-space:nowrap}
+.key-btn:hover{border-color:var(--accent);color:var(--accent)}
+.key-btn.save-btn{border-color:var(--green);color:var(--green)}
+.key-status{font-size:10px;color:var(--text3);white-space:nowrap}
+.key-status.ok{color:var(--green)}
+.key-status.err{color:var(--red)}
+.section{margin-top:1.5rem;animation:fadeUp 0.25s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+#drop-zone{border:1.5px dashed var(--border2);border-radius:var(--r-lg);padding:3.5rem 2rem;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;background:var(--surface);position:relative}
+#drop-zone:hover,#drop-zone.drag-over{border-color:var(--accent);background:var(--accent-glow)}
+#drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop-glyph{font-size:2.2rem;line-height:1;margin-bottom:1rem;color:var(--text3);transition:color 0.2s}
+#drop-zone:hover .drop-glyph,#drop-zone.drag-over .drop-glyph{color:var(--accent)}
+.drop-title{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
+.drop-sub{font-size:11px;color:var(--text2)}
+.drop-sub span{color:var(--accent)}
+#no-key-warn{display:none;margin-top:0.75rem;padding:0.6rem 0.875rem;background:var(--yellow-bg);border:1px solid rgba(251,191,36,0.3);border-radius:var(--r);font-size:11px;color:var(--yellow);text-align:center}
+#progress{display:none;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-lg);padding:1.5rem;margin-top:1.5rem}
+.prog-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.prog-spinner{width:18px;height:18px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.prog-label{font-family:var(--sans);font-size:13px;font-weight:500;color:var(--text)}
+.prog-file{font-size:11px;color:var(--text3);margin-bottom:0.75rem}
+.prog-bar-bg{height:3px;background:var(--border);border-radius:99px;overflow:hidden}
+.prog-bar{height:100%;background:var(--accent);border-radius:99px;width:0%;transition:width 0.4s ease}
+.prog-steps{display:flex;gap:6px;margin-top:0.75rem;flex-wrap:wrap}
+.prog-step{font-size:10px;padding:2px 8px;border-radius:99px;border:1px solid var(--border);color:var(--text3);transition:all 0.2s}
+.prog-step.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.prog-step.done{border-color:rgba(52,211,153,0.4);color:var(--green);background:var(--green-bg)}
+#results{display:none;margin-top:1.5rem}
+.result-meta{display:flex;align-items:center;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
+.chip{font-size:10px;padding:2px 9px;border-radius:99px;border:1px solid var(--border2);color:var(--text3)}
+.reset-btn{font-size:11px;font-family:var(--mono);padding:4px 12px;border:1px solid var(--border2);border-radius:var(--r);background:transparent;color:var(--text2);cursor:pointer;transition:all 0.15s}
+.reset-btn:hover{border-color:var(--accent);color:var(--accent)}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* Optimize full plugin button */
+.optimize-bar{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding:0.875rem 1rem;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-lg)}
+.optimize-bar p{font-size:12px;color:var(--text2);flex:1;font-family:var(--sans)}
+.optimize-btn{font-family:var(--sans);font-size:12px;font-weight:600;padding:7px 18px;background:var(--accent);border:none;border-radius:var(--r);color:#0d0f12;cursor:pointer;transition:background 0.15s;white-space:nowrap;flex-shrink:0}
+.optimize-btn:hover{background:var(--yellow)}
+.optimize-btn:disabled{opacity:0.4;cursor:not-allowed}
 
-html { scroll-behavior: smooth; }
+/* Full optimize panel */
+#optimize-panel{display:none;margin-bottom:1.5rem;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-lg);overflow:hidden}
+.opt-header{display:flex;align-items:center;gap:10px;padding:1rem 1.25rem;border-bottom:1px solid var(--border)}
+.opt-title{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text);flex:1}
+.opt-status{font-size:11px;color:var(--text3)}
+.download-btn{font-family:var(--sans);font-size:11px;font-weight:600;padding:5px 14px;background:var(--green);border:none;border-radius:var(--r);color:#050a08;cursor:pointer;transition:background 0.15s;display:none}
+.download-btn:hover{background:#6ee7b7}
+#opt-code{padding:1rem 1.25rem;font-size:11px;color:#a8d8b0;white-space:pre-wrap;word-break:break-all;line-height:1.65;max-height:500px;overflow-y:auto;background:#050709;min-height:60px}
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 13px;
-  min-height: 100vh;
-  line-height: 1.6;
-  overflow-x: hidden;
-}
+.score-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-lg);padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.25rem;margin-bottom:1rem}
+.score-ring{width:74px;height:74px;border-radius:50%;border:3px solid;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.score-num{font-family:var(--sans);font-size:26px;font-weight:600;line-height:1}
+.score-denom{font-size:10px;opacity:0.55;margin-top:1px}
+.score-body{flex:1}
+.score-title{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
+.score-verdict{font-size:12px;color:var(--text2);line-height:1.6}
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:1.25rem}
+.cat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:0.875rem 1rem;text-align:center}
+.cat-val{font-family:var(--sans);font-size:22px;font-weight:600;margin-bottom:3px}
+.cat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em}
+.group-head{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);padding-bottom:6px;border-bottom:1px solid var(--border);margin:1.25rem 0 0.75rem}
+.issue{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:0.875rem 1rem;margin-bottom:6px}
+.issue-top{display:flex;align-items:flex-start;gap:8px;cursor:pointer}
+.sev{font-size:9px;font-weight:600;padding:2px 8px;border-radius:99px;border:1px solid;white-space:nowrap;flex-shrink:0;margin-top:1px;text-transform:uppercase;letter-spacing:0.06em}
+.sev-critical{color:var(--red);border-color:rgba(248,113,113,0.5);background:var(--red-bg)}
+.sev-warning{color:var(--yellow);border-color:rgba(251,191,36,0.5);background:var(--yellow-bg)}
+.sev-info{color:var(--blue);border-color:rgba(96,165,250,0.5);background:var(--blue-bg)}
+.sev-good{color:var(--green);border-color:rgba(52,211,153,0.5);background:var(--green-bg)}
+.issue-title{font-family:var(--sans);font-size:13px;font-weight:500;color:var(--text);flex:1}
+.issue-line{font-size:10px;color:var(--text3);margin-top:2px}
+.issue-body{margin-top:0.5rem;font-size:11px;color:var(--text2);line-height:1.7;display:none}
+.issue-body.open{display:block}
+.issue-detail-text{margin-bottom:8px}
+.issue-fix{margin-top:0.5rem;background:#050709;border-left:2px solid var(--green);padding:0.6rem 0.875rem;font-size:11px;color:#86efac;white-space:pre-wrap;word-break:break-all;line-height:1.65;border-radius:0 var(--r) var(--r) 0}
 
-/* Scanline texture */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,0.03) 2px,
-    rgba(0,0,0,0.03) 4px
-  );
-  pointer-events: none;
-  z-index: 999;
-}
+/* Fix this issue button + streaming panel */
+.fix-btn{font-family:var(--mono);font-size:10px;padding:3px 10px;border:1px solid var(--accent);border-radius:var(--r);background:transparent;color:var(--accent);cursor:pointer;transition:all 0.15s;margin-top:8px;display:inline-block}
+.fix-btn:hover{background:var(--accent-dim)}
+.fix-btn:disabled{opacity:0.4;cursor:not-allowed}
+.fix-stream{margin-top:8px;background:#050709;border-left:2px solid var(--accent);padding:0.6rem 0.875rem;font-size:11px;color:#fcd9b6;white-space:pre-wrap;word-break:break-all;line-height:1.65;border-radius:0 var(--r) var(--r) 0;display:none;min-height:30px}
+.fix-stream.open{display:block}
+.fix-stream-status{font-size:10px;color:var(--text3);margin-bottom:4px}
 
-/* Grid background */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 48px 48px;
-  opacity: 0.25;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ── Layout ─────────────────────────────────────────── */
-.wrap {
-  position: relative;
-  z-index: 1;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 1.5rem 4rem;
-}
-
-/* ── Header ─────────────────────────────────────────── */
-header {
-  position: relative; z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.75rem 1.5rem 1.5rem;
-  border-bottom: 1px solid var(--border);
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px; height: 38px;
-  border: 1.5px solid var(--accent);
-  border-radius: var(--r);
-  color: var(--accent);
-  font-weight: 600;
-  font-size: 13px;
-  flex-shrink: 0;
-  letter-spacing: 0.02em;
-}
-
-.htext h1 {
-  font-family: var(--sans);
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--text);
-  letter-spacing: -0.01em;
-}
-.htext p { font-size: 11px; color: var(--text3); margin-top: 1px; }
-
-.header-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* API key input in header */
-.key-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-.key-wrap input {
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  border-radius: var(--r);
-  padding: 6px 60px 6px 10px;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--text);
-  width: 220px;
-  outline: none;
-  transition: border-color 0.15s;
-}
-.key-wrap input::placeholder { color: var(--text3); }
-.key-wrap input:focus { border-color: var(--accent); }
-.key-wrap input.saved { border-color: var(--green); }
-
-.key-actions {
-  position: absolute;
-  right: 6px;
-  display: flex;
-  gap: 4px;
-}
-.key-btn {
-  font-family: var(--mono);
-  font-size: 10px;
-  padding: 2px 7px;
-  border-radius: 4px;
-  border: 1px solid var(--border2);
-  background: transparent;
-  color: var(--text2);
-  cursor: pointer;
-  transition: all 0.12s;
-  white-space: nowrap;
-}
-.key-btn:hover { border-color: var(--accent); color: var(--accent); }
-.key-btn.save-btn { border-color: var(--green); color: var(--green); }
-.key-status {
-  font-size: 10px;
-  color: var(--text3);
-  white-space: nowrap;
-}
-.key-status.ok  { color: var(--green); }
-.key-status.err { color: var(--red); }
-
-/* ── Main sections ──────────────────────────────────── */
-.section {
-  margin-top: 1.5rem;
-  animation: fadeUp 0.25s ease both;
-}
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Drop zone ──────────────────────────────────────── */
-#drop-zone {
-  border: 1.5px dashed var(--border2);
-  border-radius: var(--r-lg);
-  padding: 3.5rem 2rem;
-  text-align: center;
-  cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
-  background: var(--surface);
-  position: relative;
-}
-#drop-zone:hover,
-#drop-zone.drag-over {
-  border-color: var(--accent);
-  background: var(--accent-glow);
-}
-#drop-zone input[type=file] {
-  position: absolute; inset: 0; opacity: 0;
-  cursor: pointer; width: 100%; height: 100%;
-}
-.drop-glyph {
-  font-size: 2.2rem;
-  line-height: 1;
-  margin-bottom: 1rem;
-  color: var(--text3);
-  transition: color 0.2s;
-}
-#drop-zone:hover .drop-glyph,
-#drop-zone.drag-over .drop-glyph { color: var(--accent); }
-
-.drop-title {
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 4px;
-}
-.drop-sub { font-size: 11px; color: var(--text2); }
-.drop-sub span { color: var(--accent); }
-
-/* No-key warning */
-#no-key-warn {
-  display: none;
-  margin-top: 0.75rem;
-  padding: 0.6rem 0.875rem;
-  background: var(--yellow-bg);
-  border: 1px solid rgba(251,191,36,0.3);
-  border-radius: var(--r);
-  font-size: 11px;
-  color: var(--yellow);
-  text-align: center;
-}
-
-/* ── Progress ───────────────────────────────────────── */
-#progress {
-  display: none;
-  background: var(--surface);
-  border: 1px solid var(--border2);
-  border-radius: var(--r-lg);
-  padding: 1.5rem;
-  margin-top: 1.5rem;
-}
-.prog-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 1rem;
-}
-.prog-spinner {
-  width: 18px; height: 18px;
-  border: 2px solid var(--border2);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  flex-shrink: 0;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.prog-label {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-}
-.prog-file {
-  font-size: 11px;
-  color: var(--text3);
-  margin-bottom: 0.75rem;
-}
-.prog-bar-bg {
-  height: 3px;
-  background: var(--border);
-  border-radius: 99px;
-  overflow: hidden;
-}
-.prog-bar {
-  height: 100%;
-  background: var(--accent);
-  border-radius: 99px;
-  width: 0%;
-  transition: width 0.4s ease;
-}
-.prog-steps {
-  display: flex;
-  gap: 6px;
-  margin-top: 0.75rem;
-  flex-wrap: wrap;
-}
-.prog-step {
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 99px;
-  border: 1px solid var(--border);
-  color: var(--text3);
-  transition: all 0.2s;
-}
-.prog-step.active {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-dim);
-}
-.prog-step.done {
-  border-color: rgba(52,211,153,0.4);
-  color: var(--green);
-  background: var(--green-bg);
-}
-
-/* ── Results ────────────────────────────────────────── */
-#results { display: none; margin-top: 1.5rem; }
-
-.result-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-}
-.chip {
-  font-size: 10px;
-  padding: 2px 9px;
-  border-radius: 99px;
-  border: 1px solid var(--border2);
-  color: var(--text3);
-}
-.reset-btn {
-  margin-left: auto;
-  font-size: 11px;
-  font-family: var(--mono);
-  padding: 4px 12px;
-  border: 1px solid var(--border2);
-  border-radius: var(--r);
-  background: transparent;
-  color: var(--text2);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.reset-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-/* Score card */
-.score-card {
-  background: var(--surface);
-  border: 1px solid var(--border2);
-  border-radius: var(--r-lg);
-  padding: 1.25rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  margin-bottom: 1rem;
-}
-.score-ring {
-  width: 74px; height: 74px;
-  border-radius: 50%;
-  border: 3px solid;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.score-num {
-  font-family: var(--sans);
-  font-size: 26px;
-  font-weight: 600;
-  line-height: 1;
-}
-.score-denom { font-size: 10px; opacity: 0.55; margin-top: 1px; }
-.score-body { flex: 1; }
-.score-title {
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 4px;
-}
-.score-verdict { font-size: 12px; color: var(--text2); line-height: 1.6; }
-
-/* Category grid */
-.cats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 8px;
-  margin-bottom: 1.25rem;
-}
-.cat {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 0.875rem 1rem;
-  text-align: center;
-}
-.cat-val {
-  font-family: var(--sans);
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 3px;
-}
-.cat-lbl {
-  font-size: 10px;
-  color: var(--text3);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-/* Issue groups */
-.group-head {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text3);
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--border);
-  margin: 1.25rem 0 0.75rem;
-}
-
-.issue {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 0.875rem 1rem;
-  margin-bottom: 6px;
-  cursor: pointer;
-  transition: border-color 0.15s;
-}
-.issue:hover { border-color: var(--border2); }
-.issue-top {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-.sev {
-  font-size: 9px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 99px;
-  border: 1px solid;
-  white-space: nowrap;
-  flex-shrink: 0;
-  margin-top: 1px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.sev-critical { color: var(--red);    border-color: rgba(248,113,113,0.5); background: var(--red-bg); }
-.sev-warning  { color: var(--yellow); border-color: rgba(251,191,36,0.5);  background: var(--yellow-bg); }
-.sev-info     { color: var(--blue);   border-color: rgba(96,165,250,0.5);  background: var(--blue-bg); }
-.sev-good     { color: var(--green);  border-color: rgba(52,211,153,0.5);  background: var(--green-bg); }
-
-.issue-title {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-  flex: 1;
-}
-.issue-line {
-  font-size: 10px;
-  color: var(--text3);
-  margin-top: 2px;
-}
-.issue-body {
-  margin-top: 0.5rem;
-  font-size: 11px;
-  color: var(--text2);
-  line-height: 1.7;
-  display: none;
-}
-.issue-body.open { display: block; }
-.issue-fix {
-  margin-top: 0.5rem;
-  background: #050709;
-  border-left: 2px solid var(--green);
-  padding: 0.6rem 0.875rem;
-  font-size: 11px;
-  color: #86efac;
-  white-space: pre-wrap;
-  word-break: break-all;
-  line-height: 1.65;
-  border-radius: 0 var(--r) var(--r) 0;
-}
-.toggle-hint {
-  font-size: 10px;
-  color: var(--text3);
-  margin-top: 4px;
-}
-
-/* Error */
-#error-box {
-  display: none;
-  margin-top: 1.5rem;
-  padding: 1rem 1.25rem;
-  background: var(--red-bg);
-  border: 1px solid rgba(248,113,113,0.35);
-  border-radius: var(--r);
-  color: var(--red);
-  font-size: 12px;
-  line-height: 1.7;
-}
-
-/* Footer */
-footer {
-  position: relative; z-index: 1;
-  border-top: 1px solid var(--border);
-  padding: 1rem 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 10px;
-  color: var(--text3);
-  max-width: 900px;
-  margin: 0 auto;
-}
-footer a { color: var(--text3); text-decoration: none; }
-footer a:hover { color: var(--accent); }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--surface); }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+#error-box{display:none;margin-top:1.5rem;padding:1rem 1.25rem;background:var(--red-bg);border:1px solid rgba(248,113,113,0.35);border-radius:var(--r);color:var(--red);font-size:12px;line-height:1.7}
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--text3);max-width:900px;margin:0 auto}
+footer a{color:var(--text3);text-decoration:none}
+footer a:hover{color:var(--accent)}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 </style>
 </head>
 <body>
@@ -548,7 +163,6 @@ footer a:hover { color: var(--accent); }
 </header>
 
 <div class="wrap">
-
   <div class="section">
     <div id="drop-zone">
       <input type="file" id="file-input" accept=".cs" />
@@ -576,20 +190,23 @@ footer a:hover { color: var(--accent); }
 
   <div id="error-box"></div>
   <div id="results"></div>
-
 </div>
 
 <footer>
-  <span>Carbon Plugin Analyzer — your API key is stored only in your browser's localStorage</span>
+  <span>Carbon Plugin Analyzer — API key stored only in your browser's localStorage</span>
   <span>powered by <a href="https://anthropic.com" target="_blank" rel="noopener">Claude</a></span>
 </footer>
 
 <script>
-// ── API key management ──────────────────────────────────────────────────────
-const keyInput    = document.getElementById('api-key-input');
-const keyStatus   = document.getElementById('key-status');
-const noKeyWarn   = document.getElementById('no-key-warn');
-let keyVisible    = false;
+// ── State ─────────────────────────────────────────────────────────────────────
+let currentCode     = '';
+let currentFilename = '';
+let currentIssues   = [];
+
+// ── API key ───────────────────────────────────────────────────────────────────
+const keyInput  = document.getElementById('api-key-input');
+const keyStatus = document.getElementById('key-status');
+let keyVisible  = false;
 
 function loadSavedKey() {
   const saved = localStorage.getItem('cpa_apikey');
@@ -600,70 +217,46 @@ function loadSavedKey() {
     keyStatus.className = 'key-status ok';
   }
 }
-
 function saveKey() {
   const val = keyInput.value.trim();
-  if (!val) {
-    keyStatus.textContent = 'enter a key first';
-    keyStatus.className = 'key-status err';
-    return;
-  }
+  if (!val) { keyStatus.textContent = 'enter a key first'; keyStatus.className = 'key-status err'; return; }
   localStorage.setItem('cpa_apikey', val);
   keyInput.classList.add('saved');
   keyStatus.textContent = '● saved';
   keyStatus.className = 'key-status ok';
-  setTimeout(() => {
-    keyStatus.textContent = '● key saved';
-  }, 1500);
+  setTimeout(() => { keyStatus.textContent = '● key saved'; }, 1500);
 }
-
 function toggleKeyVis() {
   keyVisible = !keyVisible;
   keyInput.type = keyVisible ? 'text' : 'password';
   document.getElementById('toggle-key-btn').textContent = keyVisible ? '●●●' : '···';
 }
+keyInput.addEventListener('input', () => { keyInput.classList.remove('saved'); keyStatus.textContent = ''; keyStatus.className = 'key-status'; });
+keyInput.addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
 
-keyInput.addEventListener('input', () => {
-  keyInput.classList.remove('saved');
-  keyStatus.textContent = '';
-  keyStatus.className = 'key-status';
-});
+function getApiKey() {
+  return keyInput.value.trim() || localStorage.getItem('cpa_apikey') || '';
+}
 
-keyInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter') saveKey();
-});
-
-// ── Drop zone ───────────────────────────────────────────────────────────────
-const dropZone = document.getElementById('drop-zone');
+// ── Drop zone ─────────────────────────────────────────────────────────────────
+const dropZone  = document.getElementById('drop-zone');
 const fileInput = document.getElementById('file-input');
 
-dropZone.addEventListener('dragover', e => {
-  e.preventDefault();
-  dropZone.classList.add('drag-over');
-});
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
 dropZone.addEventListener('drop', e => {
-  e.preventDefault();
-  dropZone.classList.remove('drag-over');
+  e.preventDefault(); dropZone.classList.remove('drag-over');
   const f = e.dataTransfer.files[0];
   if (f && f.name.endsWith('.cs')) processFile(f);
   else showError('Please drop a .cs file.');
 });
-fileInput.addEventListener('change', () => {
-  if (fileInput.files[0]) processFile(fileInput.files[0]);
-});
-
-// Show warning if no key saved yet when hovering drop zone
+fileInput.addEventListener('change', () => { if (fileInput.files[0]) processFile(fileInput.files[0]); });
 dropZone.addEventListener('mouseenter', () => {
-  if (!localStorage.getItem('cpa_apikey') && !keyInput.value.trim()) {
-    noKeyWarn.style.display = 'block';
-  }
+  if (!getApiKey()) document.getElementById('no-key-warn').style.display = 'block';
 });
-dropZone.addEventListener('mouseleave', () => {
-  noKeyWarn.style.display = 'none';
-});
+dropZone.addEventListener('mouseleave', () => { document.getElementById('no-key-warn').style.display = 'none'; });
 
-// ── Progress helpers ────────────────────────────────────────────────────────
+// ── Progress ──────────────────────────────────────────────────────────────────
 const progressEl = document.getElementById('progress');
 const progLabel  = document.getElementById('prog-label');
 const progFile   = document.getElementById('prog-file');
@@ -675,12 +268,9 @@ function setStep(idx, label) {
   progBar.style.width = ((idx + 1) / steps.length * 100) + '%';
   steps.forEach((id, i) => {
     const el = document.getElementById(id);
-    if (i < idx)       { el.className = 'prog-step done'; }
-    else if (i === idx) { el.className = 'prog-step active'; }
-    else                { el.className = 'prog-step'; }
+    el.className = 'prog-step' + (i < idx ? ' done' : i === idx ? ' active' : '');
   });
 }
-
 function showProgress(filename) {
   document.getElementById('error-box').style.display = 'none';
   document.getElementById('results').style.display = 'none';
@@ -690,43 +280,114 @@ function showProgress(filename) {
   progBar.style.width = '0%';
   setStep(0, 'Reading file...');
 }
+function hideProgress() { progressEl.style.display = 'none'; }
 
-function hideProgress() {
-  progressEl.style.display = 'none';
-}
-
-// ── Error ────────────────────────────────────────────────────────────────────
+// ── Error ─────────────────────────────────────────────────────────────────────
 const errorBox = document.getElementById('error-box');
 function showError(msg) {
   hideProgress();
   dropZone.style.display = 'block';
-  errorBox.innerHTML = `<strong>Error:</strong> ${esc(msg)}`;
+  errorBox.innerHTML = '<strong>Error:</strong> ' + esc(msg);
   errorBox.style.display = 'block';
   fileInput.value = '';
 }
 
-// ── Core analysis ────────────────────────────────────────────────────────────
-async function processFile(file) {
-  const apiKey = keyInput.value.trim() || localStorage.getItem('cpa_apikey') || '';
-  if (!apiKey) {
-    showError('No API key found. Enter your Anthropic API key in the field at the top and click Save.');
-    return;
-  }
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function scoreColor(s) {
+  if (s >= 80) return { ring: 'var(--green)',  text: 'var(--green)' };
+  if (s >= 55) return { ring: 'var(--yellow)', text: 'var(--yellow)' };
+  return               { ring: 'var(--red)',   text: 'var(--red)' };
+}
 
+async function callClaude(systemPrompt, userMessage) {
+  const apiKey = getApiKey();
+  if (!apiKey) throw new Error('No API key. Enter your Anthropic API key at the top and click Save.');
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 4000,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: userMessage }]
+    })
+  });
+  if (!resp.ok) {
+    const errBody = await resp.json().catch(() => ({}));
+    const msg = errBody?.error?.message || 'HTTP ' + resp.status;
+    if (resp.status === 401) throw new Error('Invalid API key. Check the key and try again.');
+    if (resp.status === 429) throw new Error('Rate limited. Wait a moment and try again.');
+    throw new Error(msg);
+  }
+  return resp;
+}
+
+async function streamClaude(systemPrompt, userMessage, onChunk) {
+  const apiKey = getApiKey();
+  if (!apiKey) throw new Error('No API key. Enter your Anthropic API key at the top and click Save.');
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 4000,
+      stream: true,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: userMessage }]
+    })
+  });
+  if (!resp.ok) {
+    const errBody = await resp.json().catch(() => ({}));
+    const msg = errBody?.error?.message || 'HTTP ' + resp.status;
+    if (resp.status === 401) throw new Error('Invalid API key. Check the key and try again.');
+    if (resp.status === 429) throw new Error('Rate limited. Wait a moment and try again.');
+    throw new Error(msg);
+  }
+  const reader = resp.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop();
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const raw = line.slice(6).trim();
+      if (raw === '[DONE]') continue;
+      try {
+        const ev = JSON.parse(raw);
+        if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') {
+          onChunk(ev.delta.text);
+        }
+      } catch {}
+    }
+  }
+}
+
+// ── Core analysis ─────────────────────────────────────────────────────────────
+async function processFile(file) {
+  if (!getApiKey()) { showError('No API key found. Enter your Anthropic API key in the field at the top and click Save.'); return; }
   showProgress(file.name);
   setStep(0, 'Reading file...');
-
-  let code;
-  try {
-    code = await file.text();
-  } catch(e) {
-    showError('Could not read file: ' + e.message);
-    return;
-  }
-
-  const lines = code.split('\n').length;
-  const kb    = (file.size / 1024).toFixed(1);
-
+  try { currentCode = await file.text(); } catch(e) { showError('Could not read file: ' + e.message); return; }
+  currentFilename = file.name;
+  const lines = currentCode.split('\n').length;
+  const kb = (file.size / 1024).toFixed(1);
   setStep(1, 'Sending to Claude...');
 
   const systemPrompt = `You are an expert Rust game server plugin developer specializing in Carbon modding framework and uMod/Oxide. You deeply understand C# performance optimization for Rust plugins.
@@ -742,100 +403,47 @@ Rules:
 - include 5-10 issues covering: hook performance, LINQ in hot paths, null checks, Facepunch.Pool, timer leaks, string allocation, permission caching, Carbon API compatibility
 - always include at least one good severity item if any correct pattern exists
 - reference real line numbers and real method/variable names from the code
-- fix is a string with escaped newlines (\n) and escaped backslashes, or null
+- fix is a string with escaped newlines and backslashes, or null
 - do not include comments in the JSON`;
 
   let responseText;
   try {
     setStep(2, 'Claude is analyzing...');
-
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type':         'application/json',
-        'x-api-key':            apiKey,
-        'anthropic-version':    '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model:      'claude-sonnet-4-6',
-        max_tokens: 2000,
-        system:     systemPrompt,
-        messages: [{
-          role:    'user',
-          content: `Analyze this Rust Carbon plugin (filename: ${file.name}, ${lines} lines, ${kb}KB):\n\n${code.slice(0, 15000)}`
-        }]
-      })
-    });
-
-    if (!resp.ok) {
-      const errBody = await resp.json().catch(() => ({}));
-      const msg = errBody?.error?.message || `HTTP ${resp.status}`;
-      if (resp.status === 401) throw new Error('Invalid API key. Check the key you entered and try again.');
-      if (resp.status === 429) throw new Error('Rate limited. Wait a moment and try again.');
-      throw new Error(msg);
-    }
-
+    const resp = await callClaude(systemPrompt, `Analyze this Rust Carbon plugin (filename: ${file.name}, ${lines} lines, ${kb}KB):\n\n${currentCode.slice(0, 15000)}`);
     const data = await resp.json();
-    responseText = data.content
-      .filter(b => b.type === 'text')
-      .map(b => b.text)
-      .join('');
-
-  } catch(e) {
-    showError(e.message);
-    return;
-  }
+    responseText = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+  } catch(e) { showError(e.message); return; }
 
   setStep(3, 'Rendering report...');
-
   let parsed;
   try {
-    // Strip markdown fences if present
-    let clean = responseText.replace(/```json|\s*```/g, '').trim();
-    // Extract the first { ... } block in case model adds surrounding text
+    const clean = responseText.replace(/```json|\s*```/g, '').trim();
     const match = clean.match(/\{[\s\S]*\}/);
     if (!match) throw new Error('No JSON object found in response');
     parsed = JSON.parse(match[0]);
   } catch(e) {
-    console.error('Parse error:', e.message, '\nRaw response:', responseText.slice(0, 500));
-    showError('Could not parse the analysis response. Raw response logged to console. Please try again.');
+    console.error('Parse error:', e.message, '\nRaw:', responseText.slice(0, 500));
+    showError('Could not parse the analysis response. Check browser console for details.');
     return;
   }
 
+  currentIssues = parsed.issues || [];
   parsed._meta = { filename: file.name, lines, kb };
-
-  setTimeout(() => {
-    hideProgress();
-    renderResults(parsed);
-    fileInput.value = '';
-  }, 300);
+  setTimeout(() => { hideProgress(); renderResults(parsed); fileInput.value = ''; }, 300);
 }
 
-// ── Render ───────────────────────────────────────────────────────────────────
-function scoreColor(s) {
-  if (s >= 80) return { ring: 'var(--green)',  text: 'var(--green)' };
-  if (s >= 55) return { ring: 'var(--yellow)', text: 'var(--yellow)' };
-  return               { ring: 'var(--red)',   text: 'var(--red)' };
-}
-
-function esc(str) {
-  return String(str)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
-}
-
+// ── Render results ────────────────────────────────────────────────────────────
 function renderResults(data) {
   const resultsEl = document.getElementById('results');
   const sc        = scoreColor(data.overallScore ?? 0);
   const cats      = data.categories || {};
   const issues    = data.issues || [];
   const meta      = data._meta || {};
-
-  const groups = { critical:[], warning:[], info:[], good:[] };
-  issues.forEach(i => (groups[i.severity] || groups.info).push(i));
+  const groups    = { critical:[], warning:[], info:[], good:[] };
+  issues.forEach((issue, globalIdx) => {
+    issue._idx = globalIdx;
+    (groups[issue.severity] || groups.info).push(issue);
+  });
 
   const catDefs = [
     { key: 'performance',   label: 'Performance' },
@@ -846,77 +454,88 @@ function renderResults(data) {
 
   let html = '';
 
-  // Meta chips + reset
-  html += `<div class="result-meta">`;
-  if (meta.filename) html += `<span class="chip">📄 ${esc(meta.filename)}</span>`;
-  if (meta.lines)    html += `<span class="chip">${meta.lines} lines</span>`;
-  if (meta.kb)       html += `<span class="chip">${meta.kb} KB</span>`;
-  html += `<button class="reset-btn" onclick="resetTool()">← New file</button></div>`;
+  // Meta + reset
+  html += '<div class="result-meta">';
+  if (meta.filename) html += '<span class="chip">\uD83D\uDCC4 ' + esc(meta.filename) + '</span>';
+  if (meta.lines)    html += '<span class="chip">' + meta.lines + ' lines</span>';
+  if (meta.kb)       html += '<span class="chip">' + meta.kb + ' KB</span>';
+  html += '<button class="reset-btn" onclick="resetTool()">&#8592; New file</button></div>';
+
+  // Optimize full plugin bar
+  html += '<div class="optimize-bar">'
+    + '<p>Apply all optimizations automatically — Claude rewrites the entire plugin and gives you a download.</p>'
+    + '<button class="optimize-btn" id="optimize-full-btn" onclick="optimizeFull()">&#9654; Optimize full plugin</button>'
+    + '</div>';
+
+  // Full optimize streaming panel
+  html += '<div id="optimize-panel">'
+    + '<div class="opt-header">'
+    + '<div class="opt-title">Optimized plugin</div>'
+    + '<div class="opt-status" id="opt-status"></div>'
+    + '<button class="download-btn" id="download-btn" onclick="downloadOptimized()">&#8595; Download .cs</button>'
+    + '</div>'
+    + '<div id="opt-code"></div>'
+    + '</div>';
 
   // Score card
-  html += `<div class="score-card">
-    <div class="score-ring" style="border-color:${sc.ring};color:${sc.text};">
-      <div class="score-num">${data.overallScore ?? '?'}</div>
-      <div class="score-denom">/100</div>
-    </div>
-    <div class="score-body">
-      <div class="score-title">Optimization score</div>
-      <div class="score-verdict">${esc(data.verdict || '')}</div>
-    </div>
-  </div>`;
+  html += '<div class="score-card">'
+    + '<div class="score-ring" style="border-color:' + sc.ring + ';color:' + sc.text + ';">'
+    + '<div class="score-num">' + (data.overallScore ?? '?') + '</div>'
+    + '<div class="score-denom">/100</div></div>'
+    + '<div class="score-body">'
+    + '<div class="score-title">Optimization score</div>'
+    + '<div class="score-verdict">' + esc(data.verdict || '') + '</div>'
+    + '</div></div>';
 
   // Category grid
-  html += `<div class="cats">`;
+  html += '<div class="cats">';
   catDefs.forEach(({ key, label }) => {
     const val = cats[key] ?? '—';
-    const c   = typeof val === 'number' ? scoreColor(val) : { text: 'var(--text3)' };
-    html += `<div class="cat">
-      <div class="cat-val" style="color:${c.text}">${val}</div>
-      <div class="cat-lbl">${label}</div>
-    </div>`;
+    const c = typeof val === 'number' ? scoreColor(val) : { text: 'var(--text3)' };
+    html += '<div class="cat"><div class="cat-val" style="color:' + c.text + '">' + val + '</div><div class="cat-lbl">' + label + '</div></div>';
   });
-  html += `</div>`;
+  html += '</div>';
 
   // Issue groups
   const groupDefs = [
-    { key: 'critical', label: `Critical  ·  ${groups.critical.length}` },
-    { key: 'warning',  label: `Warnings  ·  ${groups.warning.length}` },
-    { key: 'info',     label: `Suggestions  ·  ${groups.info.length}` },
-    { key: 'good',     label: `Good practices  ·  ${groups.good.length}` },
+    { key: 'critical', label: 'Critical' },
+    { key: 'warning',  label: 'Warnings' },
+    { key: 'info',     label: 'Suggestions' },
+    { key: 'good',     label: 'Good practices' },
   ];
-
   let hasAny = false;
   groupDefs.forEach(({ key, label }) => {
     const list = groups[key];
     if (!list.length) return;
     hasAny = true;
-    html += `<div class="group-head">${label}</div>`;
-    list.forEach((issue, idx) => {
-      const uid = key + '_' + idx;
-      const sc2 = 'sev-' + (issue.severity || 'info');
-      html += `<div class="issue" onclick="toggleIssue('${uid}')">
-        <div class="issue-top">
-          <span class="sev ${sc2}">${issue.severity}</span>
-          <div style="flex:1">
-            <div class="issue-title">${esc(issue.title || '')}</div>
-            ${issue.line && issue.line !== 'general'
-              ? `<div class="issue-line">line ${esc(String(issue.line))}</div>`
-              : ''}
-          </div>
-          <span style="font-size:11px;color:var(--text3);flex-shrink:0;margin-top:1px;">▾</span>
-        </div>
-        <div class="issue-body" id="ib_${uid}">
-          <div style="margin-bottom:4px">${esc(issue.detail || '')}</div>
-          ${issue.fix ? `<div class="issue-fix">${esc(issue.fix)}</div>` : ''}
-        </div>
-      </div>`;
+    html += '<div class="group-head">' + label + ' &nbsp;&#xB7;&nbsp; ' + list.length + '</div>';
+    list.forEach(issue => {
+      const uid  = 'i' + issue._idx;
+      const sc2  = 'sev-' + (issue.severity || 'info');
+      const canFix = issue.severity !== 'good';
+      html += '<div class="issue" id="issue_' + uid + '">'
+        + '<div class="issue-top" onclick="toggleIssue(\'' + uid + '\')">'
+        + '<span class="sev ' + sc2 + '">' + esc(issue.severity) + '</span>'
+        + '<div style="flex:1"><div class="issue-title">' + esc(issue.title || '') + '</div>'
+        + (issue.line && issue.line !== 'general' ? '<div class="issue-line">line ' + esc(String(issue.line)) + '</div>' : '')
+        + '</div>'
+        + '<span style="font-size:11px;color:var(--text3);flex-shrink:0;margin-top:1px;">&#9662;</span>'
+        + '</div>'
+        + '<div class="issue-body" id="ib_' + uid + '">'
+        + '<div class="issue-detail-text">' + esc(issue.detail || '') + '</div>'
+        + (issue.fix ? '<div class="issue-fix">' + esc(issue.fix) + '</div>' : '')
+        + (canFix ? '<button class="fix-btn" id="fixbtn_' + uid + '" onclick="fixIssue(' + issue._idx + ',\'' + uid + '\')">&#9656; Fix this issue</button>' : '')
+        + '<div class="fix-stream" id="fixstream_' + uid + '">'
+        + '<div class="fix-stream-status" id="fixstatus_' + uid + '"></div>'
+        + '<div id="fixcode_' + uid + '"></div>'
+        + '</div>'
+        + '</div>'
+        + '</div>';
     });
   });
 
   if (!hasAny) {
-    html += `<div style="padding:1rem;background:var(--green-bg);border:1px solid rgba(52,211,153,0.3);border-radius:var(--r);color:var(--green);font-size:12px;margin-top:1rem;">
-      ✓ No issues found — plugin looks well-optimized!
-    </div>`;
+    html += '<div style="padding:1rem;background:var(--green-bg);border:1px solid rgba(52,211,153,0.3);border-radius:var(--r);color:var(--green);font-size:12px;margin-top:1rem;">&#10003; No issues found — plugin looks well-optimized!</div>';
   }
 
   resultsEl.innerHTML = html;
@@ -928,15 +547,141 @@ function toggleIssue(uid) {
   if (body) body.classList.toggle('open');
 }
 
+// ── Fix single issue ──────────────────────────────────────────────────────────
+async function fixIssue(issueIdx, uid) {
+  const issue = currentIssues[issueIdx];
+  if (!issue) return;
+
+  const btn        = document.getElementById('fixbtn_' + uid);
+  const streamDiv  = document.getElementById('fixstream_' + uid);
+  const statusDiv  = document.getElementById('fixstatus_' + uid);
+  const codeDiv    = document.getElementById('fixcode_' + uid);
+  const bodyDiv    = document.getElementById('ib_' + uid);
+
+  btn.disabled = true;
+  btn.textContent = 'Fixing...';
+  streamDiv.classList.add('open');
+  statusDiv.textContent = 'Claude is rewriting this section...';
+  codeDiv.textContent = '';
+  bodyDiv.classList.add('open');
+
+  const systemPrompt = `You are an expert Rust/Carbon C# plugin developer. The user has a specific issue in their plugin that needs fixing. Provide ONLY the corrected C# code for the affected section — no explanation before or after, no markdown fences, just raw C# code. Include a brief comment above the changed lines starting with // FIX: explaining what changed.`;
+
+  const userMsg = `Plugin file: ${currentFilename}
+
+Issue to fix:
+Title: ${issue.title}
+Severity: ${issue.severity}
+Line: ${issue.line}
+Detail: ${issue.detail}
+Suggested fix: ${issue.fix || 'none provided'}
+
+Relevant plugin code:
+${currentCode.slice(0, 12000)}
+
+Provide the corrected code section only.`;
+
+  try {
+    let accumulated = '';
+    await streamClaude(systemPrompt, userMsg, chunk => {
+      accumulated += chunk;
+      codeDiv.textContent = accumulated;
+      streamDiv.scrollTop = streamDiv.scrollHeight;
+    });
+    statusDiv.textContent = '✓ Done — copy the code above into your plugin';
+    btn.textContent = '✓ Fixed';
+  } catch(e) {
+    statusDiv.textContent = 'Error: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = '⟳ Retry fix';
+  }
+}
+
+// ── Optimize full plugin ──────────────────────────────────────────────────────
+let optimizedCode = '';
+
+async function optimizeFull() {
+  if (!currentCode) return;
+  const btn   = document.getElementById('optimize-full-btn');
+  const panel = document.getElementById('optimize-panel');
+  const codeEl  = document.getElementById('opt-code');
+  const statusEl = document.getElementById('opt-status');
+  const dlBtn  = document.getElementById('download-btn');
+
+  btn.disabled = true;
+  btn.textContent = 'Optimizing...';
+  panel.style.display = 'block';
+  codeEl.textContent = '';
+  statusEl.textContent = 'Streaming rewrite...';
+  dlBtn.style.display = 'none';
+  optimizedCode = '';
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  const systemPrompt = `You are an expert Rust game server plugin developer specializing in Carbon modding framework and uMod/Oxide. You are rewriting a C# plugin to apply all performance and Carbon-compatibility optimizations.
+
+Output ONLY the complete rewritten C# source file. No explanation. No markdown. No backticks. Just raw C# code from the first using statement to the final closing brace. Add // FIX: comments above every changed line explaining what was improved.
+
+Apply ALL of these optimizations where relevant:
+- Add permission caches (HashSet<ulong>) populated on OnPlayerConnected, rebuilt on permission grant/revoke hooks
+- Replace live UserHasPermission() calls with cache lookups
+- Change Dictionary<string, T> keyed by net ID to Dictionary<ulong, T>
+- Add early-exit type filters to OnEntityKill and other high-frequency hooks
+- Replace GetComponent<T>() in hot hooks with 'is' type checks
+- Replace string.Contains() chains with 'is' type checks first, string checks last
+- Replace DateTime subtraction with DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+- Add dirty flags for SaveData() so disk writes only happen when data changed
+- Add layer masks to all Physics.Raycast calls
+- Replace Vector3.Distance comparisons with sqrMagnitude
+- Pre-allocate reusable List/buffer fields for Vis.Entities calls
+- Add entity.net null guards before accessing entity.net.ID
+- Add OnServerInitialized to rebuild caches for already-connected players
+- Note Carbon-native migration path in a comment at the top`;
+
+  const userMsg = `Rewrite this entire plugin with all optimizations applied:\n\nFilename: ${currentFilename}\n\n${currentCode.slice(0, 14000)}`;
+
+  try {
+    await streamClaude(systemPrompt, userMsg, chunk => {
+      optimizedCode += chunk;
+      codeEl.textContent = optimizedCode;
+      codeEl.scrollTop = codeEl.scrollHeight;
+    });
+    statusEl.textContent = '✓ Complete';
+    dlBtn.style.display = 'inline-block';
+    btn.textContent = '&#9654; Re-optimize';
+    btn.disabled = false;
+  } catch(e) {
+    statusEl.textContent = 'Error: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = '&#9654; Optimize full plugin';
+  }
+}
+
+function downloadOptimized() {
+  if (!optimizedCode) return;
+  const blob = new Blob([optimizedCode], { type: 'text/plain' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = currentFilename.replace('.cs', '_optimized.cs');
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Reset ─────────────────────────────────────────────────────────────────────
 function resetTool() {
   document.getElementById('results').style.display = 'none';
   document.getElementById('results').innerHTML = '';
   document.getElementById('error-box').style.display = 'none';
   dropZone.style.display = 'block';
   fileInput.value = '';
+  currentCode = '';
+  currentFilename = '';
+  currentIssues = [];
+  optimizedCode = '';
 }
 
-// ── Init ─────────────────────────────────────────────────────────────────────
+// ── Init ──────────────────────────────────────────────────────────────────────
 loadSavedKey();
 </script>
 </body>
